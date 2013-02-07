@@ -20,6 +20,8 @@ public class MainActivity extends AndARActivity {
 	Model3D mObject;
 	ARToolkit mArtoolkit;
 	GameThread gameThread;
+	Handler mHandler = new Handler();
+	Runnable mThread;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,14 @@ public class MainActivity extends AndARActivity {
 			
 			//gameThread = new GameThread(ball, envirrorment);
 			
+			mThread = new Runnable() {
+				@Override
+				public void run() {
+					ball.moveX();
+					mHandler.postDelayed(this, 50);
+				}
+			};
+			mHandler.postDelayed(mThread, 20);
 
 		} catch (AndARException ex){
 			//handle the exception, that means: show the user what happened
@@ -57,6 +67,7 @@ public class MainActivity extends AndARActivity {
 		super.onDestroy();
 		if(gameThread!= null)
 			gameThread.setRunning(false);
+		mHandler.removeCallbacks(mThread);
 	}
 	
 	private Model mModel;

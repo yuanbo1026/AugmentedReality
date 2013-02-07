@@ -64,6 +64,10 @@ public class Ball implements GameObject{
 		mat_diffuse = GraphicsUtil.makeFloatBuffer(mat_diffusef);
 	}
 	
+	public void moveX() {
+		this.x += 1;
+	}
+	
 	/**
 	 * draw the ball
 	 * @param gl
