@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import edu.dhbw.andar.ARToolkit;
 import edu.dhbw.andar.AndARActivity;
 import edu.dhbw.andar.exceptions.AndARException;
@@ -19,24 +19,44 @@ public class MainActivity extends AndARActivity {
 
 	Model3D mObject;
 	ARToolkit mArtoolkit;
+	GameThread gameThread;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		CustomRenderer renderer = new CustomRenderer();//optional, may be set to null
-		super.setNonARRenderer(renderer);//or might be omited
 		try {
 			//register a object for each marker type
 			mArtoolkit = super.getArtoolkit();
-			loadModel("superman.obj");
+			loadModel("bench.obj");
 
 			mObject = new Model3D(mModel, "patt.hiro");
-			mArtoolkit.registerARObject(mObject);
+			
+			Envirrorment envirrorment = new Envirrorment();
+			mArtoolkit.registerARObject(envirrorment);
+			
+			CustomRenderer renderer = new CustomRenderer(envirrorment);//optional, may be set to null
+			super.setNonARRenderer(renderer);//or might be omited
+			
+			final Ball ball = new Ball(envirrorment);
+			
+			renderer.addGameObject(ball);
+			
+			//gameThread = new GameThread(ball, envirrorment);
+			
+
 		} catch (AndARException ex){
 			//handle the exception, that means: show the user what happened
+			gameThread.setRunning(false);
 			System.out.println("");
 		}		
-		startPreview();
+		
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(gameThread!= null)
+			gameThread.setRunning(false);
 	}
 	
 	private Model mModel;
@@ -69,7 +89,7 @@ public class MainActivity extends AndARActivity {
 
 	@Override
 	public void uncaughtException(Thread arg0, Throwable ex) {
-		Log.e("AndAR EXCEPTION", ex.getMessage());
+		if(gameThread!= null) gameThread.setRunning(false);
 		finish();
 	}
 

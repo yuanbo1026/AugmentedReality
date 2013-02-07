@@ -1,12 +1,15 @@
 package dk.au.augcard;
 
 import java.nio.FloatBuffer;
+import java.util.Vector;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import edu.dhbw.andar.ARObject;
 import edu.dhbw.andar.AndARRenderer;
 import edu.dhbw.andar.interfaces.OpenGLRenderer;
 import edu.dhbw.andar.util.GraphicsUtil;
+import edu.dhbw.andobjviewer.graphics.Model3D;
 /**
  * A custom OpenGL renderer, that gets registered to the {@link AndARRenderer}.
  * It allows you to draw non Augmented Reality stuff, and setup the OpenGL
@@ -15,6 +18,9 @@ import edu.dhbw.andar.util.GraphicsUtil;
  *
  */
 public class CustomRenderer implements OpenGLRenderer {
+	
+	private Envirrorment mCenter;
+	private Vector<GameObject> mObjects = new Vector<GameObject>();
 	
 	/**
 	 * Light definitions
@@ -30,11 +36,25 @@ public class CustomRenderer implements OpenGLRenderer {
 	private FloatBuffer diffuseLightBuffer1 = GraphicsUtil.makeFloatBuffer(diffuselight1);
 	private FloatBuffer ambientLightBuffer1 = GraphicsUtil.makeFloatBuffer(ambientlight1);
 	
+	public CustomRenderer(Envirrorment center) {
+		mCenter = center;
+	}
+	
 	/**
 	 * Do non Augmented Reality stuff here. Will be called once after all AR objects have
 	 * been drawn. The transformation matrices may have to be reset.
 	 */
 	public final void draw(GL10 gl) {
+		if(mCenter.isVisible()) {
+			mCenter.transformToCenter(gl);
+			gl.glRotatef(-90, 0, 0, 1f);
+			//draw non AR stuff here.
+			for (GameObject gameObj : mObjects) {
+				gl.glPushMatrix();
+				gameObj.draw(gl);
+				gl.glPopMatrix();
+			}
+		}
 	}
 
 
@@ -66,5 +86,9 @@ public class CustomRenderer implements OpenGLRenderer {
 		gl.glEnable(GL10.GL_CULL_FACE);
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glEnable(GL10.GL_NORMALIZE);
+	}
+	
+	public void addGameObject(GameObject obj) {
+		mObjects.add(obj);
 	}
 }
