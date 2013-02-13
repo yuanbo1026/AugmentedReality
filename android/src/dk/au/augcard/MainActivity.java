@@ -29,30 +29,31 @@ public class MainActivity extends AndARActivity {
 		try {
 			//register a object for each marker type
 			mArtoolkit = super.getArtoolkit();
-			loadModel("bench.obj");
+			loadModel("plane7.obj");
 
 			mObject = new Model3D(mModel, "patt.hiro");
 			
 			Envirrorment envirrorment = new Envirrorment();
-			mArtoolkit.registerARObject(envirrorment);
-			
-			CustomRenderer renderer = new CustomRenderer(envirrorment);//optional, may be set to null
-			super.setNonARRenderer(renderer);//or might be omited
+			mArtoolkit.registerARObject(mObject);
+			StandardRender render = new StandardRender();
+			super.setNonARRenderer(render);
+			//CustomRenderer renderer = new CustomRenderer(envirrorment);//optional, may be set to null
+			//super.setNonARRenderer(renderer);//or might be omited
 			
 			final Ball ball = new Ball(envirrorment);
 			
-			renderer.addGameObject(ball);
+			//renderer.addGameObject(ball);
 			
 			//gameThread = new GameThread(ball, envirrorment);
 			
-			mThread = new Runnable() {
+			/*mThread = new Runnable() {
 				@Override
 				public void run() {
 					ball.moveX();
 					mHandler.postDelayed(this, 50);
 				}
-			};
-			mHandler.postDelayed(mThread, 20);
+			};*/
+			//mHandler.postDelayed(mThread, 20);
 
 		} catch (AndARException ex){
 			//handle the exception, that means: show the user what happened
