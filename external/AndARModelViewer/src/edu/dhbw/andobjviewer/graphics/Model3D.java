@@ -69,8 +69,8 @@ public class Model3D extends ARObject implements Serializable{
 		this.nonTexturedGroups = nonTexturedGroups.toArray(new Group[nonTexturedGroups.size()]);	
 	}
 	
-	public Model3D(Model model, String pattern) {
-		super("model", pattern, 80.0, new double[]{0,0});
+	public Model3D(Model model, String pattern, double markerWidth) {
+		super("model", pattern, markerWidth, new double[]{0,0});
 		this.model = model;
 		model.finalize();
 		//separate texture from non textured groups for performance reasons
@@ -113,10 +113,17 @@ public class Model3D extends ARObject implements Serializable{
 	
 	private Writer log = new LogWriter();
 	
+	public Model getModel() {
+		return model;
+	}
+	
+	public void setZrot(float dz) {
+		model.zrot = dz;
+	}
+	
 	@Override
 	public void draw(GL10 gl) {
 		super.draw(gl);
-		
 		//gl = (GL10) GLDebugHelper.wrap(gl, GLDebugHelper.CONFIG_CHECK_GL_ERROR, log);
 		//do positioning:
 		gl.glScalef(model.scale, model.scale, model.scale);

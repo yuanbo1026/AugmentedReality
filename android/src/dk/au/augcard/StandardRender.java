@@ -20,8 +20,8 @@ public class StandardRender implements OpenGLRenderer {
 	 * Light definitions
 	 */	
 	
-	private float[] ambientlight1 = {.3f, .3f, .3f, 1f};
-	private float[] diffuselight1 = {.7f, .7f, .7f, 1f};
+	private float[] ambientlight1 = {1f, 1f, 1f, 1f};
+	private float[] diffuselight1 = {1.3f, 1.3f, 1.3f, 1f};
 	private float[] specularlight1 = {0.6f, 0.6f, 0.6f, 1f};
 	private float[] lightposition1 = {20.0f,-40.0f,100.0f,1f};
 	

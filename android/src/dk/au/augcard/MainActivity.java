@@ -2,13 +2,13 @@ package dk.au.augcard;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.os.Handler;
 import edu.dhbw.andar.ARToolkit;
 import edu.dhbw.andar.AndARActivity;
 import edu.dhbw.andar.exceptions.AndARException;
-import edu.dhbw.andobjviewer.graphics.Model3D;
 import edu.dhbw.andobjviewer.models.Model;
 import edu.dhbw.andobjviewer.parser.ObjParser;
 import edu.dhbw.andobjviewer.parser.ParseException;
@@ -17,11 +17,16 @@ import edu.dhbw.andobjviewer.util.BaseFileUtil;
 
 public class MainActivity extends AndARActivity {
 
-	Model3D mObject;
+	public static final int INDEX_ANDSCH = 0;
+	public static final int INDEX_TOMNAR = 1;
+	public static final int INDEX_MAKLE = 2;
+	
+	ArrayList<Plane> mPlanes = new ArrayList<Plane>();
 	ARToolkit mArtoolkit;
-	GameThread gameThread;
 	Handler mHandler = new Handler();
 	Runnable mThread;
+	int mMaxRotation = -60;
+	boolean mRunning = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -29,51 +34,49 @@ public class MainActivity extends AndARActivity {
 		try {
 			//register a object for each marker type
 			mArtoolkit = super.getArtoolkit();
-			loadModel("plane7.obj");
-
-			mObject = new Model3D(mModel, "patt.hiro");
 			
-			Envirrorment envirrorment = new Envirrorment();
-			mArtoolkit.registerARObject(mObject);
+			//Add the businesscards
+			addBusinessCard("makle_card.obj", "AU16.pat");
+			addBusinessCard("andsch_card.obj", "APP16.pat");
+			addBusinessCard("tomnar_card.obj", "CV16.pat");
+			
+			//Register arobjects
+			for(Plane p : mPlanes) {
+				mArtoolkit.registerARObject(p);
+			}
+			
 			StandardRender render = new StandardRender();
 			super.setNonARRenderer(render);
-			//CustomRenderer renderer = new CustomRenderer(envirrorment);//optional, may be set to null
-			//super.setNonARRenderer(renderer);//or might be omited
 			
-			final Ball ball = new Ball(envirrorment);
-			
-			//renderer.addGameObject(ball);
-			
-			//gameThread = new GameThread(ball, envirrorment);
-			
-			/*mThread = new Runnable() {
+			mThread = new Runnable() {
 				@Override
 				public void run() {
-					ball.moveX();
-					mHandler.postDelayed(this, 50);
+					for(Plane p : mPlanes){
+						p.update();
+					}
+					mHandler.postDelayed(this, 1);
 				}
-			};*/
-			//mHandler.postDelayed(mThread, 20);
+			};
+			mHandler.postDelayed(mThread, 0);
 
 		} catch (AndARException ex){
-			//handle the exception, that means: show the user what happened
-			gameThread.setRunning(false);
-			System.out.println("");
+			ex.printStackTrace();
 		}		
-		
+	}
+	
+	public void addBusinessCard(String objModel, String pattern) {
+		Model model = loadModel(objModel);
+		Plane plane = new Plane(model, pattern, 15.0);
+		mPlanes.add(plane);
 	}
 	
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
-		if(gameThread!= null)
-			gameThread.setRunning(false);
 		mHandler.removeCallbacks(mThread);
+		super.onDestroy();
 	}
 	
-	private Model mModel;
-
-	public void loadModel(String modelFileName) {
+	public Model loadModel(String modelFileName) {
 		try {
 			BaseFileUtil fileUtil= null;
 			fileUtil = new AssetsFileUtil(getResources().getAssets());
@@ -81,14 +84,11 @@ public class MainActivity extends AndARActivity {
 
 			//read the model file:						
 			if(modelFileName.endsWith(".obj")) {
-
 				ObjParser parser = new ObjParser(fileUtil);
-
 				if(fileUtil != null) {
 					BufferedReader fileReader = fileUtil.getReaderFromName(modelFileName);
 					if(fileReader != null) {
-						mModel = parser.parse("Model", fileReader);
-						mObject = new Model3D(mModel);
+						return parser.parse("Model", fileReader);
 					}
 				}
 			}
@@ -97,11 +97,13 @@ public class MainActivity extends AndARActivity {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	@Override
 	public void uncaughtException(Thread arg0, Throwable ex) {
-		if(gameThread!= null) gameThread.setRunning(false);
+		mHandler.removeCallbacks(mThread);
+		ex.printStackTrace();
 		finish();
 	}
 
