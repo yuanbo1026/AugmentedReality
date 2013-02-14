@@ -27,14 +27,11 @@ import java.util.Vector;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.opengl.GLUtils;
+import android.util.Log;
 import dk.au.augcard.models.Group;
 import dk.au.augcard.models.Material;
 import dk.au.augcard.models.Model;
-
-import android.opengl.GLDebugHelper;
-import android.opengl.GLUtils;
-import android.util.Log;
-
 import edu.dhbw.andar.ARObject;
 
 

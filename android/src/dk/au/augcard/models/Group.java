@@ -20,11 +20,9 @@
 package dk.au.augcard.models;
 
 import java.io.Serializable;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 import dk.au.augcard.util.MemUtil;
 
