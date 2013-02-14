@@ -2,10 +2,9 @@ package dk.au.augcard;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
+import dk.au.augcard.models.Model;
 
-import edu.dhbw.andobjviewer.graphics.Model3D;
-import edu.dhbw.andobjviewer.models.Model;
+import android.util.Log;
 
 public class Plane extends Model3D {
 

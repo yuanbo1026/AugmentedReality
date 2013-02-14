@@ -4,16 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import dk.au.augcard.models.Model;
+import dk.au.augcard.parser.ObjParser;
+import dk.au.augcard.parser.ParseException;
+import dk.au.augcard.util.AssetsFileUtil;
+import dk.au.augcard.util.BaseFileUtil;
+
 import android.os.Bundle;
 import android.os.Handler;
 import edu.dhbw.andar.ARToolkit;
 import edu.dhbw.andar.AndARActivity;
 import edu.dhbw.andar.exceptions.AndARException;
-import edu.dhbw.andobjviewer.models.Model;
-import edu.dhbw.andobjviewer.parser.ObjParser;
-import edu.dhbw.andobjviewer.parser.ParseException;
-import edu.dhbw.andobjviewer.util.AssetsFileUtil;
-import edu.dhbw.andobjviewer.util.BaseFileUtil;
 
 public class MainActivity extends AndARActivity {
 
