@@ -1,7 +1,9 @@
 ﻿<?php 
 	$tracker_url = "http://layar.mere-su.dk/tracker.php";
 
-	$data = file_get_contents("http://api.dba.dk/public/v1/ads?q=kjole&ps=40&pn=1&zip=8000");
+	$search_word = $_GET["SEARCHBOX"];
+
+	$data = file_get_contents("http://api.dba.dk/public/v1/ads?q=". $search_word ."&ps=40&pn=1&zip=8000");
 	$json_o = json_decode($data);
 	
 	$numItems = count($json_o->ads);
