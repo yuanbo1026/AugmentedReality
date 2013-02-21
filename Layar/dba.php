@@ -32,15 +32,24 @@
 
 	$itemArray = array();
 	for ($i = 0; $i<$numItems; $i++){
-		
+				
 		$id = $json_o->ads[$i]->{'ad-external-reference-id'};
 		$title =  $json_o->ads[$i]->title;
 		$description = $json_o->ads[$i]->description;
 		$price = $json_o->ads[$i]->price;
 		$link = $tracker_url . "?url=" . $json_o->ads[$i]->{'listing-url'}->Href;
-		$picture = $json_o->ads[$i]->{'all-pictures'}->{'thumbnail-pictures'}[0]->link->Href;
+		$picture = $json_o->ads[$i]->{'all-pictures'}->{'thumbnail-pictures'}[0];
 		$lon = $json_o->ads[$i]->{'ad-address'}->longitude;
 		$lat = $json_o->ads[$i]->{'ad-address'}->latitude;
+		
+		//Getting picture, using default as fallback
+		$pictureHolder = $json_o->ads[$i]->{'all-pictures'}->{'thumbnail-pictures'}[0];
+		if($pictureHolder == null){
+			$picture = "http://layar.mere-su.dk/icons/tingtilsalg_icon_128.png";
+		}
+		else{
+			$picture = $pictureHolder->link->Href;
+		}
 		
 		if($lon != 0){
 			$item = array(
