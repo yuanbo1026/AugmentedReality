@@ -1,4 +1,6 @@
 ﻿<?php 
+	$tracker_url = "http://layar.mere-su.dk/tracker.php";
+
 	$data = file_get_contents("http://api.dba.dk/public/v1/ads?q=kjole&ps=40&pn=1&zip=8000");
 	$json_o = json_decode($data);
 	
@@ -17,7 +19,7 @@
 		$title =  $json_o->ads[$i]->title;
 		$description = $json_o->ads[$i]->description;
 		$price = $json_o->ads[$i]->price;
-		$link = $json_o->ads[$i]->{'listing-url'}->Href;
+		$link = $tracker_url . "?url=" . $json_o->ads[$i]->{'listing-url'}->Href;
 		$picture = $json_o->ads[$i]->{'all-pictures'}->{'thumbnail-pictures'}[0]->link->Href;
 		$lon = $json_o->ads[$i]->{'ad-address'}->longitude;
 		$lat = $json_o->ads[$i]->{'ad-address'}->latitude;

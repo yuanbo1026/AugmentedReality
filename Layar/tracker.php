@@ -22,8 +22,7 @@ function insertTupple($url, $db) {
           Coalesce(:x)
         )
     ');
-    $date = new DateTime();
-    $timestamp = $date->getTimestamp();
+    $timestamp = time();
 
     $stmt->bindParam(':x', $url);
 
