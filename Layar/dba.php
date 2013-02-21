@@ -1,7 +1,24 @@
 ﻿<?php 
 	$tracker_url = "http://layar.mere-su.dk/tracker.php";
+	
+	//Google-stuff to get ZIP
+	$Rlat = $_GET['lat'];
+	$Rlon = $_GET['lon'];
+	$zip = 0;
+	$googleData = file_get_contents("http://maps.googleapis.com/maps/api/geocode/json?latlng=".$Rlat.",".$Rlon."&sensor=false");
+	$google_o = json_decode($googleData);
+	$dataComp = $google_o->results[0]->{'address_components'};
+	
+	for ($u = 0; $u < count($dataComp); $u++){
+		$dataTypes = $dataComp[$u]->types;
+		for ($e = 0; $e < count($dataTypes); $e++){
+			if($dataTypes[$e] == "postal_code"){
+				$zip = $dataComp[$u]->long_name;
+			}
+		}
+	}
 
-	$data = file_get_contents("http://api.dba.dk/public/v1/ads?q=kjole&ps=40&pn=1&zip=8000");
+	$data = file_get_contents("http://api.dba.dk/public/v1/ads?q=kjole&ps=40&pn=1&zip=".$zip);
 	$json_o = json_decode($data);
 	
 	$numItems = count($json_o->ads);
