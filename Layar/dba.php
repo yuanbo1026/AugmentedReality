@@ -1,5 +1,6 @@
 ﻿<?php 
 	$tracker_url = "http://layar.mere-su.dk/tracker.php";
+	$search_word = $_GET["SEARCHBOX"];
 	
 	//Google-stuff to get ZIP
 	$Rlat = $_GET['lat'];
@@ -18,7 +19,7 @@
 		}
 	}
 
-	$data = file_get_contents("http://api.dba.dk/public/v1/ads?q=kjole&ps=40&pn=1&zip=".$zip);
+	$data = file_get_contents("http://api.dba.dk/public/v1/ads?q=".$search_word."&ps=40&pn=1&zip=".$zip);
 	$json_o = json_decode($data);
 	
 	$numItems = count($json_o->ads);
